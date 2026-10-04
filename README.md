@@ -6,7 +6,9 @@
 
 ## 📸 Screenshots
 
-<!-- 프로젝트 주요 화면 이미지 또는 GIF 추가 -->
+<img width="700" alt="game" src="https://github.com/user-attachments/assets/dfb49a5f-fa0b-40bc-9926-27f78585638d" />
+<img width="700" alt="idol-book" src="https://github.com/user-attachments/assets/7bfd52be-1e62-452f-8a57-4038a91d3cf8" />
+<img width="700" alt="stats" src="https://github.com/user-attachments/assets/6eb56ebd-372f-4553-bfea-655653e0fcd0" />
 
 ## ✨ 주요 기능
 
@@ -206,10 +208,10 @@ type GameRecord = {
 
 ```bash
 # 저장소 클론
-git clone <repository-url>
+git clone https://github.com/worldst/idol-quiz.git
 
 # 프로젝트 폴더 이동
-cd <project-directory>
+cd idol-quiz
 
 # 패키지 설치
 npm install
