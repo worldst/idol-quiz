@@ -1,54 +1,225 @@
-# React + TypeScript + Vite
+# 랜덤 아이돌 맞추기
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> 아이돌 정보를 활용한 랜덤 추측 게임
 
-Currently, two official plugins are available:
+[🚀 배포 사이트](https://random-idol-quiz.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📸 Screenshots
 
-## Expanding the ESLint configuration
+<!-- 프로젝트 주요 화면 이미지 또는 GIF 추가 -->
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ✨ 주요 기능
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- 아이돌 이름 입력 시 자동완성
+- 입력한 아이돌과 정답 아이돌의 정보 비교
+  
+  - 나이
+  - 그룹
+  - 소속사
+  - 성별
+- 정답을 맞히면 결과 Drawer 표시
+- 게임 기록 기반 통계 제공
+  
+  - 최근 게임 기록
+  - 아이돌별 통계
+  - 그룹별 통계
+- 아이돌 도감
+  - 전체 및 그룹별 아이돌 조회
+- 다크 모드
+- 반응형 UI
+- 게임 기록 및 통계 데이터 LocalStorage 저장
+
+## 🛠 기술 스택
+
+### Frontend
+
+- **React**
+  * 컴포넌트 기반 UI 구성
+- **TypeScript**
+  * 아이돌 데이터 및 게임 상태 타입 정의
+- **React Router**
+  * 페이지 라우팅 및 URL 기반 상태 관리
+- **Tailwind CSS**
+  * 반응형 UI 및 스타일링
+- **shadcn/ui**
+  * Drawer, Combobox, Button 등의 UI 구현
+    
+
+### State Management
+
+- **Zustand**
+  * 게임 상태 및 게임 기록 관리
+- **Immer**
+  * 불변성을 유지하면서 Zustand 상태 업데이트를 간결하게 작성
+- **Zustand Persist Middleware**
+  * 게임 기록을 LocalStorage에 저장
+
+## 📁 프로젝트 구조
+
+```text
+src/
+├── features/
+│   ├── game/
+│   ├── idol-book/
+│   ├── stats/
+│   └── about/
+├── components/
+├── layouts/
+├── pages/
+├── lib/
+├── routes/
+├── utils/
+├── constants/
+└── types/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+기능 단위로 관련 컴포넌트, 상태, 유틸리티 등을 구성하는 Feature-based 구조를 사용했습니다.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🐛 문제 해결
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### 1. 검색어 입력 시 Combobox UX 개선
+
+**문제**
+
+초기 포커스 시 전체 아이돌 목록이 표시되고, 아이돌을 선택한 후 다시 입력창에 포커스했을 때에도 목록이 노출되는 문제가 있었습니다.
+
+**원인**
+
+입력 중인 검색어와 선택된 아이돌을 동일한 상태로 관리하면서 입력값과 목록 표시 상태를 세밀하게 제어하기 어려웠습니다.
+
+**해결**
+
+입력 중인 검색어와 선택된 아이돌을 별도의 상태로 분리했습니다.
+
+* `guess`: 현재 선택된 아이돌
+* `search`: 사용자가 입력한 검색어
+* `open`: 목록 표시 여부
+
+검색어가 존재할 때만 필터링된 결과를 표시하고, 아이돌을 선택하면 목록을 닫도록 구현했습니다.
+
+**결과**
+
+초기 포커스나 아이돌 선택 이후 불필요한 목록이 표시되지 않도록 개선했으며, 검색어를 입력했을 때만 관련 아이돌을 확인할 수 있도록 UX를 개선했습니다.
+
+---
+
+### 2. 작은 화면에서 Drawer 콘텐츠가 잘리는 문제
+
+**문제**
+
+380×660px과 같은 작은 viewport에서 정답 결과 Drawer의 하단 버튼이 잘리는 문제가 발생했습니다.
+
+**원인**
+
+Drawer의 최대 높이가 `80vh`로 제한되어 있어 세로 공간이 부족한 환경에서는 이미지와 결과 정보, 하단 버튼을 모두 표시하기 어려웠습니다.
+
+**해결**
+
+Drawer의 최대 높이를 `80vh`에서 `95dvh`로 조정하고, 모바일 환경에서 결과 이미지의 크기를 줄였습니다.
+
+**결과**
+
+작은 화면에서도 Drawer가 더 많은 공간을 사용할 수 있도록 개선했으며, 주요 콘텐츠와 하단 버튼이 잘리지 않고 표시되도록 개선했습니다.
+
+---
+
+### 3. 게임 기록 데이터 구조 설계
+
+**문제**
+
+게임이 종료될 때마다 전체 아이돌 데이터를 게임 기록에 저장하면 동일한 아이돌 정보가 여러 기록에 반복되어 데이터가 중복될 수 있었습니다.
+
+**원인**
+
+게임 결과와 아이돌 원본 데이터를 하나의 객체로 저장할 경우, 게임 기록의 수가 증가할수록 동일한 아이돌 데이터가 반복해서 저장됩니다.
+
+**해결**
+
+게임 기록에는 아이돌 전체 객체 대신 통계 계산에 필요한 최소한의 데이터만 저장하도록 설계했습니다.
+
+```ts
+type GameRecord = {
+  id: string;
+  answerId: number;
+  guesses: number;
+  playedAt: string;
+};
 ```
+
+통계 계산 시에는 `answerId`를 기준으로 아이돌 데이터를 조회하고, `Map`을 활용하여 ID 기반 조회 구조를 구성했습니다.
+
+**결과**
+
+게임 기록과 아이돌 원본 데이터를 분리하여 데이터 중복을 줄였으며, 동일한 게임 기록 데이터로 최근 게임, 아이돌별 통계, 그룹별 통계 등 다양한 통계 데이터를 계산할 수 있도록 구성했습니다.
+
+## 💡 기술적 의사결정
+
+### 왜 Zustand를 사용했는가?
+
+게임 진행 상태와 게임 기록을 여러 컴포넌트에서 공유해야 했기 때문에 전역 상태 관리가 필요했습니다.
+
+프로젝트 규모와 상태 구조를 고려하여 Context API보다 간결하게 상태를 구성하고 선택적으로 구독할 수 있는 Zustand를 사용했습니다.
+
+### 왜 LocalStorage를 사용했는가?
+
+현재 프로젝트에서는 사용자 간 데이터 공유나 서버 저장이 필요한 기능이 없기 때문에 별도의 백엔드 서버를 구축하는 대신 LocalStorage를 사용했습니다.
+
+게임 기록에 `persist`를 적용하여 페이지를 새로고침하거나 다시 방문하더라도 이전 게임 기록과 통계 데이터를 유지할 수 있도록 했습니다.
+
+### 왜 게임 기록에 전체 Idol 객체를 저장하지 않았는가?
+
+게임 기록과 아이돌 원본 데이터를 분리하고 데이터 중복을 줄이기 위해 `answerId`만 저장하도록 설계했습니다.
+
+필요한 경우 `answerId`를 기준으로 원본 아이돌 데이터와 매핑하여 사용하도록 구성했습니다.
+
+## 📱 반응형 UI
+
+다양한 viewport 크기에서 UI를 테스트하고 작은 화면에서 발생하는 레이아웃 문제를 개선했습니다.
+
+* 작은 화면에서 불필요한 가로 스크롤이 발생하지 않도록 최상위 레이아웃의 최소 너비 제한 제거
+* 가로 스크롤이 필요한 콘텐츠에만 최소 너비 적용
+* 모바일 환경에서 Drawer 이미지 크기 조정
+* `dvh`를 활용하여 모바일 viewport 변화에 대응
+* 다크 모드 지원
+
+## 📚 데이터 출처
+
+아이돌 이름, 그룹, 소속사, 생년월일 등의 정보는 각 아티스트 및 소속사의 공개된 정보를 참고하여 프로젝트용 데이터셋으로 구성했습니다.
+
+본 프로젝트는 포트폴리오 목적의 비상업적 개인 프로젝트입니다.
+
+## 🖼 이미지 출처
+
+본 프로젝트에서 사용된 아이돌 이미지는 실제 연예인의 사진이나 공식 이미지를 직접 사용하지 않고 AI 이미지 생성 도구를 이용하여 제작했습니다.
+
+* 실제 연예인의 사진 및 공식 이미지를 직접 사용하지 않았습니다.
+* 프로젝트 UI 및 게임 콘텐츠를 위한 비상업적 목적으로 사용했습니다.
+* 실제 사진을 그대로 사용하는 방식이 아닌 프로젝트용 이미지로 제작했습니다.
+
+### AI Generated Images
+
+* 생성 도구: ChatGPT Image Generation
+* 용도: 아이돌 도감 및 게임 결과 화면의 이미지
+* 이미지 형태: 프로젝트용 AI 생성 이미지
+
+## 🚀 실행 방법
+
+```bash
+# 저장소 클론
+git clone <repository-url>
+
+# 프로젝트 폴더 이동
+cd <project-directory>
+
+# 패키지 설치
+npm install
+
+# 개발 서버 실행
+npm run dev
+```
+
+## 📝 회고
+
+이번 프로젝트를 통해 React와 TypeScript를 활용한 컴포넌트 설계와 상태 관리뿐만 아니라 실제 사용 환경에서 발생하는 UI 문제를 발견하고 해결하는 과정을 경험했습니다.
+
+특히 게임 기록을 어떤 형태로 저장할지, 전역 상태와 영구 저장 데이터를 어떻게 분리할지, 작은 화면에서 UI가 어떻게 동작해야 하는지를 고민하면서 단순히 기능을 구현하는 것보다 데이터 구조와 사용자 경험을 함께 고려하는 것이 중요하다는 점을 경험했습니다.
