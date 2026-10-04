@@ -1,4 +1,4 @@
-import { CircleCheckBig,UserSearch } from "lucide-react";
+import { CircleCheckBig, UserSearch } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";

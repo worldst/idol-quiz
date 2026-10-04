@@ -5,7 +5,7 @@ import { immer } from "zustand/middleware/immer";
 import type { GameRecord } from "@/features/game/types/game-record";
 import { compareGuess } from "@/features/game/utils/compareGuess";
 import { getRandomIdol } from "@/features/game/utils/getRandomIdol";
-import type { GuessResult,Idol } from "@/types/idol";
+import type { GuessResult, Idol } from "@/types/idol";
 
 const initialState: {
   answer: Idol;

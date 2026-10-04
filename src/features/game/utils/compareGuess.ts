@@ -1,4 +1,4 @@
-import type { CompareResult,Idol } from "@/types/idol";
+import type { CompareResult, Idol } from "@/types/idol";
 import { calculateAge } from "@/utils/calculateAge";
 
 export const compareGuess = (guess: Idol, answer: Idol): CompareResult => {

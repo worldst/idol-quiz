@@ -11,7 +11,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { groupStyles } from "@/constants/groups";
-import type { GuessResult,Idol } from "@/types/idol";
+import type { GuessResult, Idol } from "@/types/idol";
 
 interface QuizResultDrawerProps {
   open: boolean;
@@ -54,7 +54,7 @@ const QuizResultDrawer = ({
         <div className="flex flex-col gap-2 px-6">
           {/* 사진 */}
           <div className="flex justify-center">
-            <div className="size-75 overflow-hidden rounded-2xl border shadow-md sm:size-85">
+            <div className="size-60 overflow-hidden rounded-2xl border shadow-md sm:size-85">
               <img
                 src={idol.img}
                 alt={idol.name}
