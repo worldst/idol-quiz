@@ -1,6 +1,6 @@
 import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Outlet, useLocation,useNavigate } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 
 import ScrollToTop from "@/components/ScrollToTop";
 import { Button } from "@/components/ui/button";
