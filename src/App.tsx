@@ -3,7 +3,7 @@ import RootRoutes from "@/routes/RootRoutes";
 
 export default function App() {
   return (
-    <div className="mx-auto w-full max-w-[1000px] min-w-[400px]">
+    <div className="mx-auto w-full max-w-[1000px]">
       <RootRoutes />
       <Toaster />
     </div>
